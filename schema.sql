@@ -1,0 +1,25 @@
+CREATE DATABASE IF NOT EXISTS orange_dashboard
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE orange_dashboard;
+
+CREATE TABLE IF NOT EXISTS users (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  display_name VARCHAR(60) NOT NULL,
+  email VARCHAR(254) NOT NULL,
+  password_hash VARCHAR(60) NOT NULL,
+  notifications_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY users_email_unique (email)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS workspace_content (
+  user_id BIGINT UNSIGNED NOT NULL,
+  content JSON NOT NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id),
+  CONSTRAINT workspace_content_user_fk
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB;
